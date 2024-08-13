@@ -3,7 +3,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-
 public class Main {
     public static void main(String[] args) throws IOException {
         String word;
@@ -36,57 +35,65 @@ public class Main {
         wrongGuesses = 0;
         boolean flag;
         char[] chars = word.toCharArray();
-        Character[] hidden = new Character[word.length()];
-        for (int i = 0; i < hidden.length; i++) {
-            hidden[i] = '*';
+        Character[] hiddenWord = new Character[word.length()];
+        for (int i = 0; i < hiddenWord.length; i++) {
+            hiddenWord[i] = '*';
         }
-        for (char k : hidden) {
-            System.out.print(k);
-        }
-
+        writeHiddenWord(hiddenWord);
         Scanner scanner = new Scanner(System.in);
         while (count < 6) {
             System.out.println("\nWrite letter:");
             try {
                 String s = scanner.nextLine();
                 flag = true;
-                if (s.length() > 1) {
-                    System.out.println("You must write only one letter!");
-                    flag = false;
-                }
-                c = s.charAt(0);
-                if (!Character.isLetter(c)) {
-                    System.out.println("You must write letter!");
-                    flag = false;
-                }
-                for (int i = 0; i < chars.length; i++) {
-                    if (chars[i] == c) {
-                        hidden[i] = Character.toUpperCase(c);
-                        flag = false;
+                if (checkInput(s)) {
+                    c = s.charAt(0);
+                    for (int i = 0; i < chars.length; i++) {
+                        if (chars[i] == c) {
+                            hiddenWord[i] = Character.toUpperCase(c);
+                            flag = false;
+                        }
                     }
+                    if (flag) {
+                        count++;
+                        wrongGuesses++;
+                    }
+                    writeHiddenWord(hiddenWord);
+                    if (checkAllLettersOpened(hiddenWord)) {
+                        System.out.println("");
+                        System.out.println("You win!");
+                        break;
+                    }
+                    System.out.println();
+                    System.out.println("Mistakes " + count + ", you have " + (6 - count) + " attempts");
+                    drawGibbet(wrongGuesses);
                 }
-                if (flag) {
-                    count++;
-                    wrongGuesses++;
-                }
-                for (char k : hidden) {
-                    System.out.print(k);
-                }
-                if (checkHidden(hidden)) {
-                    System.out.println("");
-                    System.out.println("You win!");
-                    break;
-                }
-                System.out.println();
-                System.out.println("Mistakes " + count + ", you have " + (6 - count) + " attempts");
-                drawGibbet(wrongGuesses);
             } catch (RuntimeException re) {
                 System.out.print(re.getMessage());
             }
         }
     }
 
-    static boolean checkHidden(Character[] array) {
+    static void writeHiddenWord(Character[] array) {
+        for (char k : array) {
+            System.out.print(k);
+        }
+    }
+
+    static boolean checkInput(String s) {
+        if (s.length() > 1) {
+            System.out.println("You must write only one letter!");
+            return false;
+        }
+        char c = s.charAt(0);
+        if (!Character.isLetter(c)) {
+            System.out.println("You must write letter!");
+            return false;
+        }
+        return true;
+    }
+
+    static boolean checkAllLettersOpened(Character[] array) {
         for (char k : array) {
             if (k == 42)
                 return false;
