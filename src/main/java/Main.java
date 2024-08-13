@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+
 public class Main {
     public static void main(String[] args) throws IOException {
         String word;
@@ -48,14 +49,16 @@ public class Main {
             System.out.println("\nWrite letter:");
             try {
                 String s = scanner.nextLine();
-                if (s.length() > 1)
-                    System.out.println("You must write only one letter!");
-                c = s.charAt(0);
-                if (!Character.isLetter(c))
-                    System.out.println("You must write letter!");
-                System.out.println(c);
                 flag = true;
-
+                if (s.length() > 1) {
+                    System.out.println("You must write only one letter!");
+                    flag = false;
+                }
+                c = s.charAt(0);
+                if (!Character.isLetter(c)) {
+                    System.out.println("You must write letter!");
+                    flag = false;
+                }
                 for (int i = 0; i < chars.length; i++) {
                     if (chars[i] == c) {
                         hidden[i] = Character.toUpperCase(c);
